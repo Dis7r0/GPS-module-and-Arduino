@@ -1,0 +1,91 @@
+﻿GPS And Devices
+How do apps on your device use GPS? 
+If you run the Google Maps from web browser (or WebView, or UIWebView,..) it usually uses HTML5 geolocation API to determine your location and then use that to show your position on Google Maps. HTML5 geolocation then uses some lower level services to get your location, like GPS sensor, WIFI, network etc. 
+If your app is run as a standalone application, it depends on your platform, your device sensors, your network i.e., how the location is determined. So for instance on Android along with the GPS sensor, LocationManager is used, which retrieves the location again using GPS, or from network provider, or returns last known location, etc. There's a lot of various interesting techniques behind this, For example to determine your location using Wifi, Google has a database of WIFI SSIDs and their locations retrieved using anonymous device tracking and is able to roughly tell your location only from Wifi networks around you.
+UNDERSTANDING ANDROID GPS AND LOCATION MANAGER
+Nearly all Android devices possess GPS in them and you can make use of it to discover the location of your user. Location recognition applications are smarter and offer better information.
+Take for instance, you are hungry; you open your android device and it tells you that a food canteen is 30 meters away from your current location and illustrates to you the precise location.
+That’s the kind of thing that location recognition applications can do.
+THERE ARE BASICALLY TWO WAYS TO OBTAIN USER’S LOCATION:
+1)Through the use of GPS
+2)Through the use of Mobile Phone’s Network
+GPS is the most correct one but it works when outdoors alone. Again, it speedily uses up the device battery. On the contrary, Network Location Provider makes use of cell tower and Wi-Fi signals and is functional both indoors and outdoors.
+It responds very fast and makes use of less battery power.
+If you are creating any location based app, you can make your app more smarter by discovering user’s location routinely. For this you are required to incorporate location modules in your application.
+Initially, in your application project you need to open AndroidManifest.xml and add ACCESS_FINE_LOCATION (Which is made up of both ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION). Again, if you are obtaining network-based location then you are required to incorporate INTERNET permission as well.
+The techniques explained here apply to the platform location API in android.location. The Google Location Services API, a section of Google Play Services, makes available a more powerful, high-level framework that routinely takes care of location providers, user movement, and location accuracy.
+It as well takes care of location update scheduling based on power usage parameters you make available. In the majority of situations, you’ll obtain better battery performance, in addition to more suitable accuracy, through the use of the Location Services API.
+Being aware of where the user is permits your application to be smarter and provide better information to the user.
+DIFFICULTIES IN DETERMINING USER LOCATION
+Getting user location from a mobile device can be complex. There are a lot of reasons why a location reading (irrespective of the source) can be made up of errors and be inexact. A few sources of error in the user location are:
+A lot of location sources GPS, Cell-ID, and Wi-Fi can each offer a clue to users location. Determining which to make use of and trust is a matter of trade-offs in accurateness, swiftness, and battery-efficiency.
+USER MOVEMENT
+Due to the fact that the location of the user alters, you ought to account for movement by re-estimating user location every now and then.
+DIFFERING ACCURACY
+Location calculates coming from each location source are not reliable in their accuracy. A location obtained 10 seconds ago from one source might be more accurate than the most recent location from another or same source.
+These challenges can make it tricky to get an accurate user location reading. This tutorial makes available information to assist you face up to these challenges to get a dependable location reading.
+It as well makes available ideas that you can make use of in your application to make available to the user with an exact and responsive geolocation experience.
+REQUESTING LOCATION UPDATES
+Prior to addressing a few of the location errors already explained below is an introduction on the way you can obtain user location on Android.
+Obtaining user location in Android works by means of callback. You state that you’d like to receive location updates from the LocationManager(“Location Manager”) by calling requestLocationUpdates(), passing it a LocationListener.
+Your LocationListener ought to carry out a lot of callback technique that the Location Manager calls when the user location alters or when the status of the service changes.
+For instance, the following code illustrates the way to specify a LocationListener and request location updates:
+LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+LocationListener locationListener = new LocationListener() {
+public void onLocationChanged(Location location) {
+// Called when a new location is found by the network location provider.
+makeUseOfNewLocation(location);
+}
+
+public void onStatusChanged(String provider, int status, Bundle extras) {}
+public void onProviderEnabled(String provider) {}
+public void onProviderDisabled(String provider) {}
+};
+
+locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+The first factor in requestLocationUpdates() is the type of location provider to use (in this instance, the Network Location Provider for cell tower and Wi-Fi based location).
+You can control the frequency at which your listener receives updates with the second and third factor – the second is the minimum time interval between notifications and the third is the minimum alteration in distance between notifications – setting both to zero requests location notifications as regularly as possible.
+The last parameter is your LocationListener, which obtains callbacks for location updates.
+To ask for location updates from the GPS provider, alternate GPS_PROVIDER for NETWORK_PROVIDER. You can as well ask for location updates from both the GPS and the Network Location Provider by calling requestLocationUpdates() two times to one time for NETWORK_PROVIDER and once for GPS_PROVIDER.
+ASKING FOR USER PERMISSIONS
+In order to obtain location updates from NETWORK_PROVIDER or GPS_PROVIDER, you ought to ask for user permission by stating either the ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION permission, correspondingly, in your Android manifest file.
+For instance:
+<manifest ... >
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+...
+</manifest>
+Without these permissions, your application will fail at runtime when asking for location updates.If you are making use of both NETWORK_PROVIDER and GPS_PROVIDER, then you ought to ask for only the ACCESS_FINE_LOCATION permission, for the fact that it is made up of permission for both providers.
+(Permission for ACCESS_COARSE_LOCATION is made up of permission alone for NETWORK_PROVIDER.)
+SPECIFYING A MODEL FOR THE BEST PERFORMANCE
+Location-based applications are currently commonplace, but as a result of the less than optimum exactness, user movement, the variety of techniques to get the location, and the desire to save battery, obtaining user location is complex.
+To conquer the obstacles of obtaining a good user location while saving battery power, you ought to specify define a steady model that indicates the way your application obtains the user location.
+This model includes when you begin and stop listening for updates and when to make use of cached location data.
+
+
+Cell phone Basics:
+A cell phone is basically a sophisticated two-way radio. Towers and base stations, arranged into a network of cells, send and receive radio signals. Cell phones contain low-power transmitters that let them communicate with the nearest tower.
+
+As you travel, you move from one cell to another, and the base stations monitor the strength of your phone's signal. As you move toward the edge of one cell, your signal strength diminishes. At the same time, the base station in the cell you are approaching notices the strength of your signal increasing. As you move from cell to cell, the towers transfer your signal from one to the next.
+
+In remote locations, towers may be so far apart that they can't provide a consistent signal. Even when towers are plentiful, mountains and tall buildings can interrupt their signals. Sometimes people have a hard time getting clear signals inside buildings, especially in elevators.
+
+Even without a GPS receiver, your cell phone can provide information about your location. A computer can determine your location based on measurements of your signal, such as:
+
+Its angle of approach to the cell towers
+How long it takes the signal to travel to multiple towers
+The strength of your signal when it reaches the towers
+Since obstacles like trees and buildings can affect how long it takes your signal to travel to a tower, this method is often less accurate than a GPS measurement.­­
+
+
+Why does my smartphone connect way faster to a GPS network than a GPS module?
+Let’s first understand TTFX.
+Time To First Fix (TTFF) is a measure of the time required for a GPS receiver to acquire satellite signals and navigation data, and calculate a position solution (called a fix).
+There are several things which affect the time to first fix (TTFX).
+Getting the almanac and ephemeris. These two things are technically a little different from each other, but for our purposes we'll treat them as the same. They are the locations of the satellites, and you need a to know where they are in order to work out your own position. Each satellite transmits the whole lot roughly once every 12 minutes. So from a completely cold start with a one-channel receiver and a decent signal, TTFX will be at least 12 minutes. You can speed things up by:
+
+        1) Downloading from the internet instead - generally a good choice for phones. Downloading the almanac and ephemreris this way is known as MSB Assisted GPS.
+        2) Remembering the almanac from last time (it's good for many weeks) and only downloading the ephemeris.
+        3)Having more than one receiving channel in the device so you can listen to more than one satellite at once. The transmissions are staggered to make this work, and with some care you can use the ephemeris without an almanac which saves a lot of time. The vast majority of modules on the market these days have multiple channels, so it would be rare to find one which still needs 12 minutes.
+
+
+The cell phone operating system downloads the GPS almanac data (satellite ephemeris and status information) over the internet via the cell network and loads it into the GPS module much faster than the it would take to download that from the GPS satellites directly at 50 bps (yes, that's 50 bits per second, GPS is rather old tech optimized for operation at very low SNR), significantly expediting the time to first fix. This is called Assisted GPS. It also likely has a very accurate initial time reference from the cell modem (the cell towers are usually time synced via GPS) as well as possibly a coarse location estimate from the cell modem. All of this combined drastically reduces the amount of searching that the receiver has to do - it knows what satellites it should be able to see, so it only looks for those, and it doesn't need to wait around to for the satellites to transmit the entire message.
